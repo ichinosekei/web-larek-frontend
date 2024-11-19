@@ -41,10 +41,18 @@ npm run build
 yarn build
 ```
 
-## Структура приложения:
+## Архитектура проекта:
+* Проект построен с использованием паттерна MVC (Model-View-Controller):
+
+* Models: Управляют данными и бизнес-логикой.
+* Views: Отвечают за отображение интерфейса и взаимодействие с пользователем.
+* Controllers: Обеспечивают связь между моделями и представлениями.
+
+
 ### Основные сущности и их интерфейсы
 #### Товары
 ``` typescript
+// Товар
 export interface IProduct {
 id: string;           // Уникальный идентификатор
 title: string;        // Название
@@ -53,16 +61,33 @@ image: string;        // URL изображения
 category: string;     // Категория
 price: number | null; // Цена или null (если цена отсутствует)
 }
+
+// Массив товаров
+export interface IProductListResponse {
+    products: IProduct[]; // Массив товаров
+}
+// Товар в корзине
+export interface IOrderItem {
+    productId: string; // Идентификатор товара
+    quantity: number;  // Количество единиц товара
+}
 ```
 #### Категории
 ```typescript
+// Категория
 export interface ICategory {
 id: string;    // Уникальный идентификатор
 name: string;  // Название категории
 }
+// Массив категорий
+export interface ICategoryListResponse {
+  categories: ICategory[]; // Массив категорий
+}
+
 ```
 #### Заказы
 ```typescript
+// заказ
 export interface IOrder {
 items: IOrderItem[]; // Товары в заказе
 total: number;       // Общая сумма
@@ -71,6 +96,12 @@ address: string;     // Адрес доставки
 email: string;       // Почта
 phone: string;       // Телефон
 }
+// результа заказа
+export interface IOrderResult {
+  id: string; // Идентификатор заказа
+  total: number; // Общая стоимость заказа
+}
+
 ```
 ###  Архитектурные слои
 * Models (данные)\
