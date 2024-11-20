@@ -38,7 +38,15 @@ export class FormModel implements IFormModel {
         if (field === 'address') {
             this.address = value;
         }
+        this.checkFormValidity();
+    }
 
+    setOrderPayment(payment: string) {
+        this.payment = payment;
+        this.checkFormValidity();
+    }
+
+    checkFormValidity() {
         if (this.validateOrder()) {
             this.events.emit('order:ready', this.getOrderLot());
         }
@@ -50,7 +58,7 @@ export class FormModel implements IFormModel {
         if (!this.address) {
             errors.address = 'Необходимо указать адрес'
         }
-        else if (!this.payment) {
+        if (!this.payment) {
             errors.payment = 'Выберите способ оплаты'
         }
 

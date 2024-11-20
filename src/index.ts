@@ -1,5 +1,4 @@
 import './scss/styles.scss';
-import './scss/styles.scss';
 
 import { CDN_URL, API_URL } from './utils/constants';
 import { EventEmitter } from './components/base/events';
@@ -49,8 +48,8 @@ events.on('card:select', (item: IProduct) => { dataModel.setPreview(item); });
 
 /********** Открываем модальное окно карточки товара **********/
 events.on('modalCard:open', (item: IProduct) => {
-    const cardPreview = new CardPreview(cardPreviewTemplate, events)
-    //const cardPreview = new CardPreview(cardPreviewTemplate, events, basketModel)
+    // const cardPreview = new CardPreview(cardPreviewTemplate, events)
+    const cardPreview = new CardPreview(cardPreviewTemplate, events, basketModel)
     modal.content = cardPreview.render(item);
     modal.render();
 });
@@ -95,7 +94,7 @@ events.on('order:open', () => {
     formModel.items = basketModel.basketProducts.map(item => item.id); // передаём список id товаров которые покупаем
 });
 
-events.on('order:paymentSelection', (button: HTMLButtonElement) => { formModel.payment = button.name }) // передаём способ оплаты
+events.on('order:paymentSelection', (button: HTMLButtonElement) => {formModel.setOrderPayment(button.name); formModel.payment = button.name }) // передаём способ оплаты
 
 /********** Отслеживаем изменение в поле в вода "адреса доставки" **********/
 events.on(`order:changeAddress`, (data: { field: string, value: string }) => {
@@ -108,6 +107,16 @@ events.on('formErrors:address', (errors: Partial<IOrderForm>) => {
     order.valid = !address && !payment;
     order.formErrors.textContent = Object.values({address, payment}).filter(i => !!i).join('; ');
 })
+// events.on('formErrors:address', (errors: Partial<IOrderForm>) => {
+//     const { address, payment } = errors;
+//     order.valid = !address && !payment; // Кнопка активна только если нет ошибок
+//     order.formErrors.textContent = Object.values({ address, payment })
+//         .filter(Boolean)
+//         .join('; ');
+// });
+
+
+
 
 /********** Открытие модального окна "Email" и "Телефон" **********/
 events.on('contacts:open', () => {

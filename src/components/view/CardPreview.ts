@@ -17,36 +17,36 @@ export class CardPreview extends Card implements ICard {
     text: HTMLElement;
     button: HTMLElement;
     //
-    // constructor(template: HTMLTemplateElement, protected events: IEvents, protected basketModel: BasketModel, actions?: IAction) {
-    //     super(template, events, actions);
-    //     this.text = this._cardElement.querySelector('.card__text');
-    //     this.button = this._cardElement.querySelector('.card__button');
-    //     this.button.addEventListener('click', () => { this.events.emit('card:addBasket') });
-    // }
-    constructor(template: HTMLTemplateElement, protected events: IEvents, actions?: IAction) {
+    constructor(template: HTMLTemplateElement, protected events: IEvents, protected basketModel: BasketModel, actions?: IAction) {
         super(template, events, actions);
         this.text = this._cardElement.querySelector('.card__text');
         this.button = this._cardElement.querySelector('.card__button');
         this.button.addEventListener('click', () => { this.events.emit('card:addBasket') });
     }
+    // constructor(template: HTMLTemplateElement, protected events: IEvents, actions?: IAction) {
+    //     super(template, events, actions);
+    //     this.text = this._cardElement.querySelector('.card__text');
+    //     this.button = this._cardElement.querySelector('.card__button');
+    //     this.button.addEventListener('click', () => { this.events.emit('card:addBasket') });
+    // }
     // не факт что work
     notSale(data:IProduct) {
-        // if (!data.price) {
-        //     this.button.setAttribute('disabled', 'true');
-        //     return 'Не продается';
-        // }
-        // if (this.basketModel.isProductInBasket(data.id)) {
-        //     this.button.setAttribute('disabled', 'true');
-        //     return 'В корзине';
-        // }
-        // this.button.removeAttribute('disabled');
-        // return 'Купить';
-        if(data.price) {
-            return 'Купить'
-        } else {
-            this.button.setAttribute('disabled', 'true')
-            return 'Не продается'
+        if (!data.price) {
+            this.button.setAttribute('disabled', 'true');
+            return 'Не продается';
         }
+        if (this.basketModel.isProductInBasket(data.id)) {
+            this.button.setAttribute('disabled', 'true');
+            return 'В корзине';
+        }
+        this.button.removeAttribute('disabled');
+        return 'Купить';
+        // if(data.price) {
+        //     return 'Купить'
+        // } else {
+        //     this.button.setAttribute('disabled', 'true')
+        //     return 'Не продается'
+        // }
     }
 
 

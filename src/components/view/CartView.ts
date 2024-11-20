@@ -47,7 +47,7 @@ export class CartBasket implements ICartBasket {
       this.button.removeAttribute('disabled');
     } else {
       this.button.setAttribute('disabled', 'disabled');
-      this.basketList.replaceChildren(createElement<HTMLParagraphElement>('p', { textContent: 'В корзине ничего нет' }));
+      this.basketList.replaceChildren(createElement<HTMLParagraphElement>('p', { textContent: 'Корзина пуста' }));
     }
   }
 
