@@ -12,13 +12,16 @@ export interface ICategory {
     name: string;  // Название категории
 }
 
-export interface IOrder {
-    items: IOrderItem[]; // Список товаров в заказе
-    total: number;      // Общая стоимость заказа
-    payment: string;    // Способ оплаты
-    address: string;    // Адрес доставки
-    email: string;      // Электронная почта покупателя
-    phone: string;      // Телефон покупателя
+// export interface IOrder {
+//     items: IOrderItem[]; // Список товаров в заказе
+//     total: number;      // Общая стоимость заказа
+//     payment: string;    // Способ оплаты
+//     address: string;    // Адрес доставки
+//     email: string;      // Электронная почта покупателя
+//     phone: string;      // Телефон покупателя
+// }
+export interface IOrder extends IOrderForm {
+    items: string[];
 }
 
 export interface IOrderItem {
@@ -38,4 +41,19 @@ export interface IProductListResponse {
 
 export interface ICategoryListResponse {
     categories: ICategory[]; // Массив категорий
+}
+
+export interface IAction {
+    onClick: (event: MouseEvent) => void; // Обработчик клика на элемент
+}
+export type FormErrors = Partial<Record<keyof IOrder, string>>;
+
+
+
+export interface IOrderForm {
+    payment?: string;
+    address?: string;
+    phone?: string;
+    email?: string;
+    total?: string | number;
 }
