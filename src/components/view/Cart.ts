@@ -1,10 +1,9 @@
 import { createElement } from "../../utils/utils";
 import { IEvents } from "../base/events";
-import {IAction, IProduct} from "../../types";
 
-// класс Card, который отвечает за отображение карточки товара + обработчики событий.
+// класс Cart, который отвечает за отображение карточки товара + обработчики событий.
 
-export interface ICartBasket {
+export interface ICart {
   basket: HTMLElement;
   title: HTMLElement;
   basketList: HTMLElement;
@@ -12,12 +11,12 @@ export interface ICartBasket {
   basketPrice: HTMLElement;
   headerBasketButton: HTMLButtonElement;
   headerBasketCounter: HTMLElement;
-  updateHeaderBasketCounter(value: number): void;
+  updateHeaderCartCounter(value: number): void;
   updateTotalPrice(sumAll: number): void;
   renderCart(): HTMLElement;
 }
 
-export class CartBasket implements ICartBasket {
+export class Cart implements ICart {
   basket: HTMLElement;
   title: HTMLElement;
   basketList: HTMLElement;
@@ -51,7 +50,7 @@ export class CartBasket implements ICartBasket {
     }
   }
 
-  updateHeaderBasketCounter(value: number) {
+  updateHeaderCartCounter(value: number) {
     this.headerBasketCounter.textContent = String(value);
   }
 
@@ -65,48 +64,3 @@ export class CartBasket implements ICartBasket {
   }
 }
 
-// надо разбить на файлы наверное не понятно нужно ли покупать несколько товаров
-// можно убрать обработчик бесценно ведь он не доб в коризну
-// naming not
-export interface IBasketItem {
-  basketItem: HTMLElement;
-  index:HTMLElement;
-  title: HTMLElement;
-  price: HTMLElement;
-  buttonDelete: HTMLButtonElement;
-  render(data: IProduct, item: number): HTMLElement;
-}
-
-export class BasketItem implements IBasketItem {
-  basketItem: HTMLElement;
-  index:HTMLElement;
-  title: HTMLElement;
-  price: HTMLElement;
-  buttonDelete: HTMLButtonElement;
-
-  constructor (template: HTMLTemplateElement, protected events: IEvents, actions?: IAction) {
-    this.basketItem = template.content.querySelector('.basket__item').cloneNode(true) as HTMLElement;
-    this.index = this.basketItem.querySelector('.basket__item-index');
-    this.title = this.basketItem.querySelector('.card__title');
-    this.price = this.basketItem.querySelector('.card__price');
-    this.buttonDelete = this.basketItem.querySelector('.basket__item-delete');
-
-    if (actions?.onClick) {
-      this.buttonDelete.addEventListener('click', actions.onClick);
-    }
-  }
-
-  protected setPrice(value: number | null) {
-    if (value === null) {
-      return 'Бесценно'
-    }
-    return String(value) + ' синапсов'
-  }
-
-  render(data: IProduct, item: number) {
-    this.index.textContent = String(item);
-    this.title.textContent = data.title;
-    this.price.textContent = this.setPrice(data.price);
-    return this.basketItem;
-  }
-}

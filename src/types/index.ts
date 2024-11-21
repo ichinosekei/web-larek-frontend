@@ -1,3 +1,4 @@
+// Интерфейс, описывающий данные о продукте
 export interface IProduct {
     id: string;           // Уникальный идентификатор товара
     title: string;        // Название товара
@@ -7,53 +8,30 @@ export interface IProduct {
     price: number | null; // Цена товара; может быть null, если цена не указана
 }
 
-export interface ICategory {
-    id: string;    // Уникальный идентификатор категории
-    name: string;  // Название категории
-}
-
-// export interface IOrder {
-//     items: IOrderItem[]; // Список товаров в заказе
-//     total: number;      // Общая стоимость заказа
-//     payment: string;    // Способ оплаты
-//     address: string;    // Адрес доставки
-//     email: string;      // Электронная почта покупателя
-//     phone: string;      // Телефон покупателя
-// }
+// Интерфейс для описания заказа
 export interface IOrder extends IOrderForm {
-    items: string[];
+    items: string[]; // Массив идентификаторов товаров, включённых в заказ
 }
 
-export interface IOrderItem {
-    productId: string; // Идентификатор товара
-    quantity: number;  // Количество единиц товара
-}
-
+// Интерфейс для описания результата выполнения заказа
 export interface IOrderResult {
-    id: string; // Идентификатор заказа
-    total: number; // Общая стоимость заказа
+    id: string;      // Идентификатор заказа
+    total: number;   // Общая стоимость заказа
 }
 
-
-export interface IProductListResponse {
-    products: IProduct[]; // Массив товаров
-}
-
-export interface ICategoryListResponse {
-    categories: ICategory[]; // Массив категорий
-}
-
+// Интерфейс для описания действий (например, клика на элемент)
 export interface IAction {
     onClick: (event: MouseEvent) => void; // Обработчик клика на элемент
 }
+
+// Тип для ошибок формы. Позволяет ассоциировать каждое поле формы с текстом ошибки
 export type FormErrors = Partial<Record<keyof IOrder, string>>;
 
-
-
+// Интерфейс, описывающий форму заказа
 export interface IOrderForm {
-    payment?: string;
-    address?: string;
-    phone?: string;
-    email?: string;
-    total?: string | number;
+    payment?: string; // Способ оплаты
+    address?: string; // Адрес доставки
+    phone?: string;   // Телефон клиента
+    email?: string;   // Электронная почта клиента
+    total?: string | number; // Общая стоимость заказа
 }

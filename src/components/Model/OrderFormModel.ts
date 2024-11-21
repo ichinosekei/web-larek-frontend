@@ -1,27 +1,33 @@
-import { IEvents } from '../base/events';
-import { FormErrors } from '../../types/index'
+import {IEvents} from '../base/events';
+import {FormErrors} from '../../types'
 
-export interface IFormModel {
+// Интерфейс для модели формы заказа.
+export interface IOrderFormModel {
     payment: string;
     email: string;
     phone: string;
     address: string;
     total: number;
-    items: string[];
-    setOrderAddress(field: string, value: string): void
+    productIds: string[];
+
+    setDeliveryAddress(field: string, value: string): void
+
     validateOrder(): boolean;
-    setOrderData(field: string, value: string): void
+
+    setContactData(field: string, value: string): void
+
     validateContacts(): boolean;
-    getOrderLot(): object;
+
+    generateOrderPayload(): object;
 }
 
-export class FormModel implements IFormModel {
+export class OrderFormModel implements IOrderFormModel {
     payment: string;
     email: string;
     phone: string;
     address: string;
     total: number;
-    items: string[];
+    productIds: string[];
     formErrors: FormErrors = {};
 
     constructor(protected events: IEvents) {
@@ -30,29 +36,31 @@ export class FormModel implements IFormModel {
         this.phone = '';
         this.address = '';
         this.total = 0;
-        this.items = [];
+        this.productIds = [];
     }
 
-    // принимаем значение строки "address"
-    setOrderAddress(field: string, value: string) {
+    // Установить адрес доставки.
+    setDeliveryAddress(field: string, value: string) {
         if (field === 'address') {
             this.address = value;
         }
-        this.checkFormValidity();
+        this.checkOrderValidity();
     }
 
-    setOrderPayment(payment: string) {
+    // Установить способ оплаты.
+    setPaymentMethod(payment: string) {
         this.payment = payment;
-        this.checkFormValidity();
+        this.checkOrderValidity();
     }
 
-    checkFormValidity() {
+    // Проверка валидности данных заказа.
+    checkOrderValidity() {
         if (this.validateOrder()) {
-            this.events.emit('order:ready', this.getOrderLot());
+            this.events.emit('order:ready', this.generateOrderPayload());
         }
     }
 
-    // валидация данных строки "address"
+    // Проверка валидности адреса доставки и способа оплаты.
     validateOrder() {
         const errors: typeof this.formErrors = {};
         if (!this.address) {
@@ -67,8 +75,8 @@ export class FormModel implements IFormModel {
         return Object.keys(errors).length === 0;
     }
 
-    // принимаем значение данных строк "Email" и "Телефон"
-    setOrderData(field: string, value: string) {
+    // Установить контактные данные.
+    setContactData(field: string, value: string) {
         if (field === 'email') {
             this.email = value;
         } else if (field === 'phone') {
@@ -76,11 +84,11 @@ export class FormModel implements IFormModel {
         }
 
         if (this.validateContacts()) {
-            this.events.emit('order:ready', this.getOrderLot());
+            this.events.emit('order:ready', this.generateOrderPayload());
         }
     }
 
-    // Валидация данных строк "Email" и "Телефон"
+    // Проверка валидности контактных данных.
     validateContacts() {
         const errors: typeof this.formErrors = {};
         if (!this.email) {
@@ -94,14 +102,15 @@ export class FormModel implements IFormModel {
         return Object.keys(errors).length === 0;
     }
 
-    getOrderLot() {
+    // Сформировать объект заказа.
+    generateOrderPayload() {
         return {
             payment: this.payment,
             email: this.email,
             phone: this.phone,
             address: this.address,
             total: this.total,
-            items: this.items,
+            items: this.productIds,
         }
     }
 }

@@ -1,12 +1,12 @@
 import { IAction, IProduct } from "../../types";
 import { IEvents } from "../base/events";
-// naming and naming files
 
-export interface ICard {
+
+export interface IProductCard {
     render(data: IProduct): HTMLElement;
 }
 
-export class Card implements ICard {
+export class ProductCard implements IProductCard {
     protected _cardElement: HTMLElement;
     protected _cardCategory: HTMLElement;
     protected _cardTitle: HTMLElement;
@@ -32,31 +32,36 @@ export class Card implements ICard {
         }
     }
 
-    protected setText(element: HTMLElement, value: unknown): string {
+    protected updateTextContent(element: HTMLElement, value: unknown): string {
         if (element) {
             return element.textContent = String(value);
         }
     }
 
     set cardCategory(value: string) {
-        this.setText(this._cardCategory, value);
+        this.updateTextContent(this._cardCategory, value);
         this._cardCategory.className = `card__category card__category_${this._colors[value]}`
     }
 
-    protected setPrice(value: number | null): string {
+    protected formatPrice(value: number | null): string {
         if (value === null) {
             return 'Бесценно'
         }
         return String(value) + ' синапсов'
     }
 
-    render(data: IProduct): HTMLElement {
+    protected renderBase(data: IProduct): void {
         this._cardCategory.textContent = data.category;
         this.cardCategory = data.category;
+        // this._cardCategory.className = `card__category card__category_${this._colors[data.category]}`;
         this._cardTitle.textContent = data.title;
         this._cardImage.src = data.image;
-        this._cardImage.alt = this._cardTitle.textContent;
-        this._cardPrice.textContent = this.setPrice(data.price);
+        this._cardImage.alt = data.title;
+        this._cardPrice.textContent = this.formatPrice(data.price);
+    }
+
+    render(data: IProduct): HTMLElement {
+        this.renderBase(data);
         return this._cardElement;
     }
 }
